@@ -150,7 +150,7 @@ if __name__ == "__main__":
     print("numpy version: " + np.__version__)
     print("motornet version: " + mn.__version__)
 
-    n_batch  = 100  # number of batches to train on
+    n_batch  = 10000  # number of batches to train on
     n_models = 10     # train models in parallel
     
     n_cpus = multiprocessing.cpu_count()
