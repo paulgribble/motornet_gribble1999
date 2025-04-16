@@ -323,7 +323,7 @@ def save_model(env, policy, losses, model_name, quiet=False):
         print(f"saved {cfg_file}")
 
 
-def plot_stuff(data, model_name, l1, l2, batch):
+def plot_stuff(data, model_name, l1, l2, dt, batch):
     fig, ax = plot_simulations(xy=data['xy'], target_xy=data['tg'], figsize=(8, 6))
     if (not batch == None):
         fig.suptitle(f"batch={batch}")
@@ -347,7 +347,7 @@ def plot_stuff(data, model_name, l1, l2, batch):
     fig.savefig(model_name+"kinematics_hand_current.png")
     plt.close(fig)
     tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
-    vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/env.dt
+    vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
     pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
     fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt)
     if (not batch == None):

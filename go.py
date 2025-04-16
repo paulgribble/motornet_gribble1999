@@ -120,7 +120,7 @@ def train(model_name, n_batch, jobnum):
 
     # run model tests and make plots
 
-    l1,l2 = env.skeleton.l1, env.skeleton.l2
+    l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
 
     data, _ = test(
          "models/" + model_name + "/" + "cfg.json",
