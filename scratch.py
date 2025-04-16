@@ -23,6 +23,8 @@ from my_utils import (
 model_name = 'm0'
 batch = 'current'
 
+env = Gribble1999(effector=mn.effector.RigidTendonArm26(muscle=mn.muscle.RigidTendonHillMuscle()))
+
 l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
 
 data, _ = test(
