@@ -127,7 +127,7 @@ def train(model_name, n_batch, jobnum):
          "models/" + model_name + "/" + "weights",
          whichtest = 'test1',
     )
-    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2)
+    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
 
     # run model tests and make plots
     data, _ = test(
@@ -135,7 +135,7 @@ def train(model_name, n_batch, jobnum):
          "models/" + model_name + "/" + "weights",
          whichtest = 'test2',
     )
-    plot_stuff(data, "models/" + model_name + "/test2_", batch=batch)
+    plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
 
     # run model tests and make plots
     data, _ = test(
@@ -143,7 +143,7 @@ def train(model_name, n_batch, jobnum):
          "models/" + model_name + "/" + "weights",
          whichtest = 'test3',
     )
-    plot_stuff(data, "models/" + model_name + "/test3_", batch=batch)
+    plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
 
 if __name__ == "__main__":
 
