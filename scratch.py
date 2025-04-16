@@ -23,13 +23,14 @@ from my_utils import (
 model_name = 'm0'
 batch = 'current'
 
-# run model tests and make plots
+l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
+
 data, _ = test(
         "models/" + model_name + "/" + "cfg.json",
         "models/" + model_name + "/" + "weights",
         whichtest = 'test1',
 )
-plot_stuff(data, "models/" + model_name + "/test1_", batch=batch)
+plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
 
 # run model tests and make plots
 data, _ = test(
@@ -37,7 +38,7 @@ data, _ = test(
         "models/" + model_name + "/" + "weights",
         whichtest = 'test2',
 )
-plot_stuff(data, "models/" + model_name + "/test2_", batch=batch)
+plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
 
 # run model tests and make plots
 data, _ = test(
@@ -45,5 +46,4 @@ data, _ = test(
         "models/" + model_name + "/" + "weights",
         whichtest = 'test3',
 )
-plot_stuff(data, "models/" + model_name + "/test3_", batch=batch)
-
+plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
