@@ -119,12 +119,15 @@ def train(model_name, n_batch, jobnum):
     #print_losses(losses_weighted=losses_weighted, model_name=model_name, batch=batch)
 
     # run model tests and make plots
+
+    l1,l2 = env.skeleton.l1, env.skeleton.l2
+
     data, _ = test(
          "models/" + model_name + "/" + "cfg.json",
          "models/" + model_name + "/" + "weights",
          whichtest = 'test1',
     )
-    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch)
+    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2)
 
     # run model tests and make plots
     data, _ = test(
@@ -149,7 +152,7 @@ if __name__ == "__main__":
     print("numpy version: " + np.__version__)
     print("motornet version: " + mn.__version__)
 
-    n_batch  = 20000  # number of batches to train on
+    n_batch  = 10  # number of batches to train on
     n_models = 10     # train models in parallel
     
     n_cpus = multiprocessing.cpu_count()
