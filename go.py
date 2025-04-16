@@ -57,7 +57,7 @@ def train(model_name, n_batch, jobnum):
 
     #n_batch = 10000  # number of batches to train on
     batch_size = 32  # number of movements in each batch
-    interval = 1e9  # save progress & plots every so often
+    interval = 4000  # save progress & plots every so often
 
     # a dictionary to store loss values over training
     losses = {
