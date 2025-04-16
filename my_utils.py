@@ -71,7 +71,7 @@ def plot_activation(all_hidden, all_muscles):
     return fig, ax
 
 
-def plot_kinematics(all_xy, all_tg, all_vel, all_obs):
+def plot_kinematics(all_xy, all_tg, all_vel, pre_tgt):
     n = np.shape(all_xy)[0] # movements
     fig, ax = plt.subplots(nrows=n, ncols=2, figsize=(6, 10))
 
@@ -79,7 +79,7 @@ def plot_kinematics(all_xy, all_tg, all_vel, all_obs):
     tgvel = np.diff(np.array(all_tg), axis=1)*100
 
     for i in range(n):
-        ax[i, 0].plot(x, np.array(all_obs[i, :, [0,1]]), ':')
+        ax[i, 0].plot(x, np.array(pre_tgt[i, :, :]), ':')
         ax[i, 0].plot(x, np.array(all_tg[i, :, :]), '--')
         ax[i, 0].plot(x, np.array(all_xy[i, :, :]), '-')
         ax[i, 1].plot(x, np.array(all_vel[i, :, :]), '-')
@@ -110,6 +110,7 @@ def run_episode(env, policy, batch_size=1, catch_trial_perc=50, condition='train
         'all_hidden': [],
         'all_muscle': [],
         'all_force': [],
+        'joint': [],
     }
 
     while not terminated:
@@ -126,6 +127,7 @@ def run_episode(env, policy, batch_size=1, catch_trial_perc=50, condition='train
         data['vel'].append(info["states"]["cartesian"][:, None, 2:])  # velocity
         data['all_actions'].append(action[:, None, :])
         data['all_force'].append(info['states']['muscle'][:, 6, None, :])
+        data['joint'].append(info['states']['joint'][:, None, :])
 
     # Concatenate the lists
     for key in data:
@@ -336,10 +338,49 @@ def plot_stuff(data, model_name, batch=0):
     fig.savefig(model_name+"muscles_"+str(batch)+".png")
     fig.savefig(model_name+"muscles_current.png")
     plt.close(fig)
-    fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], all_obs=data["obs"])
+    pre_tgt = data['obs'][:, :, [0,1]]
+    fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt)
     if (not batch == None):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
-    fig.savefig(model_name+"kinematics_"+str(batch)+".png")
-    fig.savefig(model_name+"kinematics_current.png")
+    fig.savefig(model_name+"kinematics_hand_"+str(batch)+".png")
+    fig.savefig(model_name+"kinematics_hand_current.png")
     plt.close(fig)
+    tg_j = xy_to_joints(data['tg'], env.skeleton.l1, env.skeleton.l2) * 180 / np.pi
+    vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/env.dt
+    pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], env.skeleton.l1, env.skeleton.l2) * 180 / np.pi
+    fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt)
+    if (not batch == None):
+        fig.suptitle(f"batch={batch}")
+    fig.tight_layout()
+    fig.savefig(model_name+"kinematics_joint_"+str(batch)+".png")
+    fig.savefig(model_name+"kinematics_joint_current.png")
+    plt.close(fig)
+
+
+def xy_to_joints_helper(xy, l1, l2):
+    a0,a1 = 0,0
+    a1 = np.acos(((xy[0]*xy[0])+(xy[1]*xy[1])-(l1*l1)-(l2*l2))/(2*l1*l2))
+    a0 = np.atan(xy[1]/xy[0]) - np.atan((l2*np.sin(a1))/(l1+(l2*np.cos(a1))))
+    if a0 < 0:
+        a0 = np.pi+a0
+    elif a0 > np.pi:
+        a0 = a0-np.pi
+    return np.array([a0,a1])
+
+def xy_to_joints(xy, l1, l2):
+    if (len(np.shape(xy)) == 1):
+        joints = xy_to_joints_helper(xy, l1, l2)
+    elif (len(np.shape(xy)) == 2):
+        r,c = np.shape(xy)
+        joints = np.zeros((r,c))
+        for i in range(r):
+            joints[i,:] = xy_to_joints_helper(xy[i,:], l1, l2)
+    elif (len(np.shape(xy)) == 3):
+        z,r,c = np.shape(xy)
+        joints = np.zeros((z,r,c))
+        for iz in range(z):
+            for i in range(r):
+                joints[iz,i,:] = xy_to_joints_helper(xy[iz,i,:], l1, l2)
+    return joints
+
