@@ -149,13 +149,19 @@ def train(model_name, n_batch, jobnum):
 
 if __name__ == "__main__":
 
+    print("\n")
+    print("MAKE SURE TO DO THIS FIRST BEFORE RUNNING go.py:")
+    print("export OMP_NUM_THREADS=1")
+    print("export MKL_NUM_THREADS=1")
+    print("\n")
+
     print("All packages imported.")
     print("pytorch version: " + th.__version__)
     print("numpy version: " + np.__version__)
     print("motornet version: " + mn.__version__)
 
     n_batch  = 20000  # number of batches to train on
-    n_models = 10     # train models in parallel
+    n_models = 8      # train models in parallel
     
     n_cpus = multiprocessing.cpu_count()
     print(f"found {n_cpus} CPUs")
@@ -166,11 +172,13 @@ if __name__ == "__main__":
 
     th._dynamo.config.cache_size_limit = 64
 
-    result = Parallel(n_jobs=n_cpus)(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
+    n_jobs = min(n_models, n_cpus)
+
+    result = Parallel(n_jobs=n_jobs)(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
 
     print(f"testing & saving plots for {n_models} models ...")
 
-    result = Parallel(n_jobs=n_cpus)(delayed(make_test_plots)(f"m{iteration}") for iteration in range(n_models))
+    result = Parallel(n_jobs=n_jobs)(delayed(make_test_plots)(f"m{iteration}") for iteration in range(n_models))
 
 
 
