@@ -1,4 +1,7 @@
 import os
+os.environ['OMP_NUM_THREADS'] = '1'
+os.environ['MKL_NUM_THREADS'] = '1' # Set this too just in case
+
 import json
 import numpy as np
 import torch as th
@@ -21,7 +24,7 @@ from my_utils import (
 
 
 model_name = 'm0'
-batch = 'current'
+batch = 'scratch'
 
 env = Gribble1999(effector=mn.effector.RigidTendonArm26(muscle=mn.muscle.RigidTendonHillMuscle()))
 
@@ -49,3 +52,4 @@ data, _ = test(
         whichtest = 'test3',
 )
 plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
+

@@ -71,7 +71,7 @@ def plot_activation(all_hidden, all_muscles):
     return fig, ax
 
 
-def plot_kinematics(all_xy, all_tg, all_vel, pre_tgt):
+def plot_kinematics(all_xy, all_tg, all_vel, pre_tgt, y_label=''):
     n = np.shape(all_xy)[0] # movements
     fig, ax = plt.subplots(nrows=n, ncols=2, figsize=(6, 10))
 
@@ -83,7 +83,7 @@ def plot_kinematics(all_xy, all_tg, all_vel, pre_tgt):
         ax[i, 0].plot(x, np.array(all_tg[i, :, :]), '--')
         ax[i, 0].plot(x, np.array(all_xy[i, :, :]), '-')
         ax[i, 1].plot(x, np.array(all_vel[i, :, :]), '-')
-        ax[i, 0].set_ylabel('xy,tg')
+        ax[i, 0].set_ylabel(y_label)
         ax[i, 1].set_ylabel('vel')
         ax[i, 0].set_xlabel('time steps')
         ax[i, 1].set_xlabel('time steps')
@@ -337,7 +337,7 @@ def plot_stuff(data, model_name, l1, l2, dt, batch):
     fig.savefig(model_name+"muscles_"+str(batch)+".png")
     plt.close(fig)
     pre_tgt = data['obs'][:, :, [0,1]]
-    fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt)
+    fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt, y_label='xy,tg')
     if (not batch == None):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
@@ -346,7 +346,7 @@ def plot_stuff(data, model_name, l1, l2, dt, batch):
     tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
     vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
     pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
-    fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt)
+    fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt, y_label='joints,tg')
     if (not batch == None):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
