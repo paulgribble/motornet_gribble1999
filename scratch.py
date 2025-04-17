@@ -30,6 +30,7 @@ env = Gribble1999(effector=mn.effector.RigidTendonArm26(muscle=mn.muscle.RigidTe
 
 l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
 
+# Gribble & Ostry 1999 Experiment 1 (elbow only)
 data, _ = test(
         "models/" + model_name + "/" + "cfg.json",
         "models/" + model_name + "/" + "weights",
@@ -37,7 +38,7 @@ data, _ = test(
 )
 plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
 
-# run model tests and make plots
+# Gribble & Ostry 1999 Experiment 2 (shoulder only)
 data, _ = test(
         "models/" + model_name + "/" + "cfg.json",
         "models/" + model_name + "/" + "weights",
@@ -45,7 +46,8 @@ data, _ = test(
 )
 plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
 
-# run model tests and make plots
+
+# Gribble & Ostry 1999 Experiment 3 (elbow & shoulder)
 data, _ = test(
         "models/" + model_name + "/" + "cfg.json",
         "models/" + model_name + "/" + "weights",
