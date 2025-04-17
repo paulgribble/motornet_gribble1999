@@ -160,6 +160,6 @@ if __name__ == "__main__":
     if not os.path.exists("models"):
             os.mkdir("models")
 
-    result = Parallel(n_jobs=n_cpus, prefer="threads")(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
+    result = Parallel(n_jobs=n_cpus)(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
 
 
