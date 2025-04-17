@@ -187,8 +187,8 @@ def test(cfg_file, weight_file, ff_coefficient=None, loss_weights=None, whichtes
     elif (whichtest=='test2'):
         batch_size=3
     elif (whichtest=='test3'):
-        batch_size = 4
-    data = run_episode(env, policy, batch_size, 0, whichtest, ff_coefficient=ff_coefficient, detach=True)
+        batch_size=4
+    data = run_episode(env, policy, batch_size, catch_trial_perc=0, condition=whichtest, ff_coefficient=ff_coefficient, detach=True)
     overall_loss, losses_weighted = cal_loss(data=data, loss_weights=loss_weights)
 
     return data, losses_weighted
@@ -329,14 +329,12 @@ def plot_stuff(data, model_name, l1, l2, dt, batch):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
     fig.savefig(model_name+"handpaths_"+str(batch)+".png")
-    fig.savefig(model_name+"handpaths_current.png")
     plt.close(fig)
     fig, ax = plot_activation(data['all_hidden'], data['all_muscle'])
     if (not batch == None):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
     fig.savefig(model_name+"muscles_"+str(batch)+".png")
-    fig.savefig(model_name+"muscles_current.png")
     plt.close(fig)
     pre_tgt = data['obs'][:, :, [0,1]]
     fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt)
@@ -344,18 +342,16 @@ def plot_stuff(data, model_name, l1, l2, dt, batch):
         fig.suptitle(f"batch={batch}")
     fig.tight_layout()
     fig.savefig(model_name+"kinematics_hand_"+str(batch)+".png")
-    fig.savefig(model_name+"kinematics_hand_current.png")
     plt.close(fig)
-    # tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
-    # vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
-    # pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
-    # fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt)
-    # if (not batch == None):
-    #     fig.suptitle(f"batch={batch}")
-    # fig.tight_layout()
-    # fig.savefig(model_name+"kinematics_joint_"+str(batch)+".png")
-    # fig.savefig(model_name+"kinematics_joint_current.png")
-    # plt.close(fig)
+    tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
+    vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
+    pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
+    fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt)
+    if (not batch == None):
+        fig.suptitle(f"batch={batch}")
+    fig.tight_layout()
+    fig.savefig(model_name+"kinematics_joint_"+str(batch)+".png")
+    plt.close(fig)
 
 
 def xy_to_joints_helper(xy, l1, l2):

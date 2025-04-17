@@ -24,6 +24,35 @@ from my_utils import (
     plot_kinematics,
 )  # utility functions
 
+def make_test_plots(model_name):
+
+    env = Gribble1999(effector=mn.effector.RigidTendonArm26(muscle=mn.muscle.RigidTendonHillMuscle()))
+    l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
+    batch = 'final'
+
+    data, _ = test(
+    "models/" + model_name + "/" + "cfg.json",
+    "models/" + model_name + "/" + "weights",
+    whichtest = 'test1',
+    )
+    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
+
+    # run model tests and make plots
+    data, _ = test(
+         "models/" + model_name + "/" + "cfg.json",
+         "models/" + model_name + "/" + "weights",
+         whichtest = 'test2',
+    )
+    plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
+
+    # run model tests and make plots
+    data, _ = test(
+         "models/" + model_name + "/" + "cfg.json",
+         "models/" + model_name + "/" + "weights",
+         whichtest = 'test3',
+    )
+    plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
+
 
 def train(model_name, n_batch, jobnum):
 
@@ -116,32 +145,7 @@ def train(model_name, n_batch, jobnum):
         pickle.dump(data, f)
     #print_losses(losses_weighted=losses_weighted, model_name=model_name, batch=batch)
 
-    # run model tests and make plots
 
-    l1,l2,dt = env.skeleton.l1, env.skeleton.l2, env.dt
-
-    data, _ = test(
-         "models/" + model_name + "/" + "cfg.json",
-         "models/" + model_name + "/" + "weights",
-         whichtest = 'test1',
-    )
-    plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
-
-    # run model tests and make plots
-    data, _ = test(
-         "models/" + model_name + "/" + "cfg.json",
-         "models/" + model_name + "/" + "weights",
-         whichtest = 'test2',
-    )
-    plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
-
-    # run model tests and make plots
-    data, _ = test(
-         "models/" + model_name + "/" + "cfg.json",
-         "models/" + model_name + "/" + "weights",
-         whichtest = 'test3',
-    )
-    plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
 
 if __name__ == "__main__":
 
@@ -150,7 +154,7 @@ if __name__ == "__main__":
     print("numpy version: " + np.__version__)
     print("motornet version: " + mn.__version__)
 
-    n_batch  = 10000  # number of batches to train on
+    n_batch  = 20000  # number of batches to train on
     n_models = 10     # train models in parallel
     
     n_cpus = multiprocessing.cpu_count()
@@ -160,6 +164,13 @@ if __name__ == "__main__":
     if not os.path.exists("models"):
             os.mkdir("models")
 
+    th._dynamo.config.cache_size_limit = 64
+
     result = Parallel(n_jobs=n_cpus)(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
+
+    print(f"testing & saving plots for {n_models} models ...")
+
+    result = Parallel(n_jobs=n_cpus)(delayed(make_test_plots)(f"m{iteration}") for iteration in range(n_models))
+
 
 
