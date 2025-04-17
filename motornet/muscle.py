@@ -7,7 +7,7 @@ DEVICE = th.device("cpu")
 
 compile_mode = 'max-autotune'
 compile_backend = 'inductor'
-compile_dynamic = False
+compile_dynamic = True
 
 class Muscle(th.nn.Module):
   """Base class for `Muscle` objects. If a effector contains several muscles, this object will contain all of
