@@ -166,11 +166,11 @@ if __name__ == "__main__":
 
     th._dynamo.config.cache_size_limit = 64
 
-    result = Parallel(n_jobs=n_cpus, backend='multiprocessing')(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
+    result = Parallel(n_jobs=n_cpus)(delayed(train)(f"m{iteration}", n_batch, iteration) for iteration in range(n_models))
 
     print(f"testing & saving plots for {n_models} models ...")
 
-    result = Parallel(n_jobs=n_cpus, backend='multiprocessing')(delayed(make_test_plots)(f"m{iteration}") for iteration in range(n_models))
+    result = Parallel(n_jobs=n_cpus)(delayed(make_test_plots)(f"m{iteration}") for iteration in range(n_models))
 
 
 
