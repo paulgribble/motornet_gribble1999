@@ -8,7 +8,7 @@ DEVICE = th.device("cpu")
 
 compile_mode = 'max-autotune'
 compile_backend = 'inductor'
-compile_dynamic = True
+compile_dynamic = False
 
 class Skeleton(th.nn.Module):
   """Base class for `Skeleton` objects.
