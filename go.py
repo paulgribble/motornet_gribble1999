@@ -152,11 +152,11 @@ def train(model_name, n_batch, jobnum):
 
 if __name__ == "__main__":
 
-    print("\n")
-    print("MAKE SURE TO DO THIS FIRST BEFORE RUNNING go.py:")
-    print("export OMP_NUM_THREADS=1")
-    print("export MKL_NUM_THREADS=1")
-    print("\n")
+    # print("\n")
+    # print("MAKE SURE TO DO THIS FIRST BEFORE RUNNING go.py:")
+    # print("export OMP_NUM_THREADS=1")
+    # print("export MKL_NUM_THREADS=1")
+    # print("\n")
 
     print("All packages imported.")
     print("pytorch version: " + th.__version__)
