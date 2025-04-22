@@ -57,11 +57,10 @@ def plot_activation(all_hidden, all_muscles):
     n = np.shape(all_muscles)[0]
     nt = np.shape(all_muscles)[1]
     fig, ax = plt.subplots(nrows=n, ncols=2, figsize=(6, 10))
-
     x = np.linspace(0, nt, nt)
-
     for i in range(n):
-        ax[i, 0].plot(x, np.array(all_muscles[i, :, :]))
+        l = ax[i, 0].plot(x, np.array(all_muscles[i, :, :]))
+        ax[i,0].legend(l, ['pectoralis', 'deltoid', 'brachioradialis', 'tricepslat', 'biceps', 'tricepslong'])
         ax[i, 1].plot(x, np.array(all_hidden[i, :, :]))
         ax[i, 0].set_ylabel('muscle act (au)')
         ax[i, 1].set_ylabel('hidden act (au)')

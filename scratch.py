@@ -20,6 +20,7 @@ from my_utils import (
     plot_simulations,
     plot_activation,
     plot_kinematics,
+    xy_to_joints,
 )  # utility functions
 
 
@@ -36,7 +37,18 @@ data, _ = test(
         "models/" + model_name + "/" + "weights",
         whichtest = 'test1',
 )
-plot_stuff(data, "models/" + model_name + "/test1_", batch=batch, l1=l1, l2=l2, dt=dt)
+fig, ax = plot_simulations(xy=data['xy'], target_xy=data['tg'], figsize=(8, 6))
+fig.show()
+fig, ax = plot_activation(data['all_hidden'], data['all_muscle'])
+fig.show()
+pre_tgt = data['obs'][:, :, [0,1]]
+fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt, y_label='xy,tg')
+fig.show()
+tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
+vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
+pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
+fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt, y_label='joints,tg')
+fig.show()
 
 # Gribble & Ostry 1999 Experiment 2 (shoulder only)
 data, _ = test(
@@ -44,7 +56,18 @@ data, _ = test(
         "models/" + model_name + "/" + "weights",
         whichtest = 'test2',
 )
-plot_stuff(data, "models/" + model_name + "/test2_", batch=batch, l1=l1, l2=l2, dt=dt)
+fig, ax = plot_simulations(xy=data['xy'], target_xy=data['tg'], figsize=(8, 6))
+fig.show()
+fig, ax = plot_activation(data['all_hidden'], data['all_muscle'])
+fig.show()
+pre_tgt = data['obs'][:, :, [0,1]]
+fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt, y_label='xy,tg')
+fig.show()
+tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
+vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
+pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
+fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt, y_label='joints,tg')
+fig.show()
 
 
 # Gribble & Ostry 1999 Experiment 3 (elbow & shoulder)
@@ -53,5 +76,16 @@ data, _ = test(
         "models/" + model_name + "/" + "weights",
         whichtest = 'test3',
 )
-plot_stuff(data, "models/" + model_name + "/test3_", batch=batch, l1=l1, l2=l2, dt=dt)
+fig, ax = plot_simulations(xy=data['xy'], target_xy=data['tg'], figsize=(8, 6))
+fig.show()
+fig, ax = plot_activation(data['all_hidden'], data['all_muscle'])
+fig.show()
+pre_tgt = data['obs'][:, :, [0,1]]
+fig, ax = plot_kinematics(all_xy=data["xy"], all_tg=data["tg"], all_vel=data["vel"], pre_tgt=pre_tgt, y_label='xy,tg')
+fig.show()
+tg_j = xy_to_joints(data['tg'], l1, l2) * 180 / np.pi
+vel_j = np.gradient(data['joint'][:,:,:2]*180/np.pi, axis=1) * 1/dt
+pre_tgt = xy_to_joints(data['obs'][:, :, [0,1]], l1, l2) * 180 / np.pi
+fig, ax = plot_kinematics(all_xy=data["joint"][:,:,:2]*180/np.pi, all_tg=tg_j, all_vel=vel_j, pre_tgt=pre_tgt, y_label='joints,tg')
+fig.show()
 
